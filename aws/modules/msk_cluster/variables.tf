@@ -6,6 +6,12 @@ variable "environment" {
   description = "Environment of the Cluster"
 }
 
+variable "logs_retention_in_days" {
+  description = "Period to retain msk logs"
+  type = number
+  default = 7
+}
+
 variable "msk_kafka_version" {
   description = "Version of the kafka"
 }
