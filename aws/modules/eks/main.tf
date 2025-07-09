@@ -27,6 +27,10 @@ module "eks" {
       resolve_conflicts        = "OVERWRITE"
       service_account_role_arn = var.ebs_service_account_role
     }
+    
+    metrics-server = {
+      resolve_conflicts = "OVERWRITE"
+    }
   }
 
   cluster_security_group_additional_rules = {
@@ -75,9 +79,10 @@ module "eks" {
       max_size                   = config.max_size
       desired_size               = config.desired_size
       instance_types             = config.instance_types
-      subnet_ids                 = concat(var.private_subnet_ids, var.public_subnet_ids)
+      subnet_ids                 = length(config.subnet_ids) > 0 ? config.subnet_ids : concat(var.private_subnet_ids, var.public_subnet_ids)
       use_custom_launch_template = config.use_custom_launch_template
       disk_size                  = config.disk_size
+      taints                     = config.taints
       iam_role_additional_policies = {
         managed_policy_arns = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
       }

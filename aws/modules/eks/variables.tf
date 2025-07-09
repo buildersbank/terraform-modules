@@ -75,6 +75,12 @@ variable "eks_node_groups" {
     instance_types             = list(string)
     disk_size                  = number
     use_custom_launch_template = bool
+    subnet_ids                 = list(string)
+    taints                     = list(object({
+      key    = string
+      value  = string
+      effect = string
+    }))
   }))
 }
 
