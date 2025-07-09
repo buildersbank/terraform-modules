@@ -15,7 +15,8 @@ resource "aws_elasticache_replication_group" "default" {
   snapshot_retention_limit = var.snapshot_retention_limit
   snapshot_window          = var.snapshot_window
 
-  subnet_group_name = aws_elasticache_subnet_group.this.name
+  subnet_group_name  = aws_elasticache_subnet_group.this.name
+  security_group_ids = var.security_group_ids
 
   automatic_failover_enabled = var.automatic_failover_enabled
   apply_immediately          = var.apply_immediately
