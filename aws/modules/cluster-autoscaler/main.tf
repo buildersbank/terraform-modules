@@ -1,12 +1,5 @@
-resource "null_resource" "kubectl" {
-  provisioner "local-exec" {
-    command = "aws eks --region ${var.region} update-kubeconfig --name ${var.cluster_name}"
-  }
-}
-
 resource "kubernetes_namespace" "cluster_autoscaler" {
   count      = var.namespace != "kube-system" ? 1 : 0
-  depends_on = [null_resource.kubectl]
 
   metadata {
     name = var.namespace
@@ -14,7 +7,7 @@ resource "kubernetes_namespace" "cluster_autoscaler" {
 }
 
 resource "helm_release" "cluster_autoscaler" {
-  depends_on = [null_resource.kubectl, kubernetes_namespace.cluster_autoscaler]
+  depends_on = [kubernetes_namespace.cluster_autoscaler]
   name       = "cluster-autoscaler"
   chart      = "cluster-autoscaler"
   repository = "https://kubernetes.github.io/autoscaler"
