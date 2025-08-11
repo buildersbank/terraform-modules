@@ -62,7 +62,8 @@ resource "aws_iam_policy" "security_access_policy" {
           "organizations:ListHandshakesForAccount",
           "organizations:ListAccounts",
           "organizations:ListParents",
-          "organizations:ListOrganizationalUnitsForParent"
+          "organizations:ListOrganizationalUnitsForParent",
+          "route53:*"
         ]
         Resource = "*"
       }

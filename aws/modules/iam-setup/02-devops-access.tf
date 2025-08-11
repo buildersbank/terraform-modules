@@ -21,7 +21,8 @@ resource "aws_iam_policy" "devops_access_policy" {
           "cur:*",
           "ce:*",
           "acm:*",
-          "ses:*"
+          "ses:*",
+          "route53:*"
         ]
         Resource = "*"
       },

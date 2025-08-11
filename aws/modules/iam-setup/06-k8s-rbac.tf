@@ -64,6 +64,18 @@ resource "kubernetes_cluster_role" "devops_role" {
     resources  = ["pods", "nodes"]
     verbs      = ["get", "list"]
   }
+
+  rule {
+    api_groups = ["external-secrets.io"]
+    resources  = ["*"]
+    verbs      = ["*"]
+  }
+
+  rule {
+    api_groups = ["argoproj.io"]
+    resources  = ["*"]
+    verbs      = ["*"]
+  }
 }
 
 resource "kubernetes_cluster_role_binding" "devops_binding" {
@@ -165,6 +177,18 @@ resource "kubernetes_cluster_role" "devops_n3_role" {
     resources  = ["pods", "nodes"]
     verbs      = ["get", "list"]
   }
+
+  rule {
+    api_groups = ["external-secrets.io"]
+    resources  = ["*"]
+    verbs      = ["*"]
+  }
+
+  rule {
+    api_groups = ["argoproj.io"]
+    resources  = ["*"]
+    verbs      = ["*"]
+  }
 }
 
 resource "kubernetes_cluster_role_binding" "devops_n3_binding" {
@@ -253,6 +277,18 @@ resource "kubernetes_cluster_role" "dev_role" {
   rule {
     api_groups = [""]
     resources  = ["pods/portforward"]
+    verbs      = ["*"]
+  }
+
+  rule {
+    api_groups = ["external-secrets.io"]
+    resources  = ["*"]
+    verbs      = ["*"]
+  }
+
+  rule {
+    api_groups = ["argoproj.io"]
+    resources  = ["*"]
     verbs      = ["*"]
   }
 }
