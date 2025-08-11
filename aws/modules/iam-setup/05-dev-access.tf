@@ -28,7 +28,8 @@ resource "aws_iam_policy" "dev_access_policy" {
           "eks:ListInsights",
           "eks:ListPodIdentityAssociations",
           "eks:ListAccessPolicies",
-          "eks:ListAssociatedAccessPolicies"
+          "eks:ListAssociatedAccessPolicies",
+          "secretsmanager:ListSecrets"
         ],
         "Resource" : "*"
       },
