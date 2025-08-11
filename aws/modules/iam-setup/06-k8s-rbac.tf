@@ -5,25 +5,43 @@ resource "kubernetes_cluster_role" "devops_role" {
     name = "devops-cluster-role"
   }
 
-  # Permissões de leitura em recursos principais
   rule {
     api_groups = [""]
-    resources  = ["pods", "services", "endpoints", "configmaps", "events", "namespaces"]
-    verbs      = ["get", "list", "watch"]
+    resources  = ["pods", "services", "endpoints", "configmaps", "events", "namespaces", "deployments", "replicasets", "daemonsets", "statefulsets"]
+    verbs      = ["*"]
   }
 
-  # Permissões de leitura em deployments e replicasets
   rule {
-    api_groups = ["apps"]
-    resources  = ["deployments", "replicasets", "daemonsets", "statefulsets"]
-    verbs      = ["get", "list", "watch"]
+    api_groups = [""]
+    resources  = ["nodes"]
+    verbs      = ["get", "list", "watch", "describe"]
   }
 
   # Permissões de leitura em recursos de rede
   rule {
     api_groups = ["networking.k8s.io"]
     resources  = ["ingresses"]
-    verbs      = ["get", "list", "watch"]
+    verbs      = ["*"]
+  }
+
+  #Permissões para Persistent Volumes e Persistent Volume Claims
+  rule {
+    api_groups = [""]
+    resources  = ["persistentvolumes", "persistentvolumeclaims"]
+    verbs      = ["*"]
+  }
+
+  rule {
+    api_groups = ["storage.k8s.io"]
+    resources  = ["storageclasses"]
+    verbs      = ["*"]
+  }
+
+  #Permissões para Helm (releases)
+  rule {
+    api_groups = ["helm.cattle.io"]
+    resources  = ["helmcharts", "helmchartconfigs"]
+    verbs      = ["*"]
   }
 
   # Permissões para logs
@@ -88,25 +106,43 @@ resource "kubernetes_cluster_role" "devops_n3_role" {
     verbs      = ["*"]
   }
 
-  # Permissões de leitura em recursos principais
   rule {
     api_groups = [""]
-    resources  = ["pods", "services", "endpoints", "configmaps", "events", "namespaces"]
-    verbs      = ["get", "list", "watch"]
+    resources  = ["pods", "services", "endpoints", "configmaps", "events", "namespaces", "deployments", "replicasets", "daemonsets", "statefulsets"]
+    verbs      = ["*"]
   }
 
-  # Permissões de leitura em deployments e replicasets
   rule {
-    api_groups = ["apps"]
-    resources  = ["deployments", "replicasets", "daemonsets", "statefulsets"]
-    verbs      = ["get", "list", "watch"]
+    api_groups = [""]
+    resources  = ["nodes"]
+    verbs      = ["get", "list", "watch", "describe"]
   }
 
   # Permissões de leitura em recursos de rede
   rule {
     api_groups = ["networking.k8s.io"]
     resources  = ["ingresses"]
-    verbs      = ["get", "list", "watch"]
+    verbs      = ["*"]
+  }
+
+  #Permissões para Persistent Volumes e Persistent Volume Claims
+  rule {
+    api_groups = [""]
+    resources  = ["persistentvolumes", "persistentvolumeclaims"]
+    verbs      = ["*"]
+  }
+
+  rule {
+    api_groups = ["storage.k8s.io"]
+    resources  = ["storageclasses"]
+    verbs      = ["*"]
+  }
+
+  #Permissões para Helm (releases)
+  rule {
+    api_groups = ["helm.cattle.io"]
+    resources  = ["helmcharts", "helmchartconfigs"]
+    verbs      = ["*"]
   }
 
   # Permissões para logs
@@ -120,7 +156,7 @@ resource "kubernetes_cluster_role" "devops_n3_role" {
   rule {
     api_groups = [""]
     resources  = ["pods/portforward"]
-    verbs      = ["create"]
+    verbs      = ["*"]
   }
 
   # Permissões de leitura em métricas

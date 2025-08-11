@@ -1,53 +1,54 @@
 resource "aws_iam_policy" "dev_access_policy" {
   name        = "AllowedDevAccess"
-  description = "Policy com permissões específicas do EKS para ambientes de produção"
+  description = "Policy com permissões específicas do EKS para ambientes de desenvolvimento e homologação"
+
+  lifecycle {
+    ignore_changes = [
+      description
+    ]
+  }
 
   policy = jsonencode({
     "Version" : "2012-10-17",
     "Statement" : [
       {
-        "Sid" : "VisualEditor0",
+        "Sid" : "GlobalEKSActions",
         "Effect" : "Allow",
         "Action" : [
-          "s3:ListAccessPointsForObjectLambda",
+          "eks:ListClusters",
+          "eks:DescribeClusterVersions",
           "eks:ListEksAnywhereSubscriptions",
-          "eks:DescribeFargateProfile",
-          "eks:ListTagsForResource",
-          "eks:DescribeInsight",
           "eks:ListAccessEntries",
           "eks:ListAddons",
-          "s3:PutStorageLensConfiguration",
-          "s3:ListStorageLensGroups",
-          "eks:DescribeEksAnywhereSubscription",
-          "eks:DescribeAddon",
-          "eks:ListAssociatedAccessPolicies",
-          "eks:DescribeNodegroup",
-          "s3:ListAccessGrantsInstances",
           "eks:ListUpdates",
           "eks:DescribeAddonVersions",
           "eks:ListIdentityProviderConfigs",
           "eks:ListNodegroups",
-          "eks:DescribeAddonConfiguration",
-          "s3:ListAccessPoints",
-          "s3:ListJobs",
-          "s3:CreateStorageLensGroup",
-          "s3:ListMultiRegionAccessPoints",
-          "eks:DescribeAccessEntry",
-          "s3:ListStorageLensConfigurations",
-          "eks:DescribePodIdentityAssociation",
-          "eks:ListInsights",
-          "eks:DescribeClusterVersions",
-          "eks:ListPodIdentityAssociations",
           "eks:ListFargateProfiles",
-          "s3:ListAllMyBuckets",
+          "eks:ListInsights",
+          "eks:ListPodIdentityAssociations",
+          "eks:ListAccessPolicies",
+          "eks:ListAssociatedAccessPolicies"
+        ],
+        "Resource" : "*"
+      },
+      {
+        "Sid" : "ResourceSpecificEKSActions",
+        "Effect" : "Allow",
+        "Action" : [
+          "eks:DescribeFargateProfile",
+          "eks:ListTagsForResource",
+          "eks:DescribeInsight",
+          "eks:DescribeEksAnywhereSubscription",
+          "eks:DescribeAddon",
+          "eks:DescribeNodegroup",
+          "eks:DescribeAddonConfiguration",
+          "eks:DescribeAccessEntry",
+          "eks:DescribePodIdentityAssociation",
           "eks:DescribeIdentityProviderConfig",
           "eks:DescribeUpdate",
           "eks:AccessKubernetesApi",
-          "eks:DescribeCluster",
-          "eks:ListClusters",
-          "eks:ListAccessPolicies",
-          "s3:CreateJob",
-          "secretsmanager:ListSecrets"
+          "eks:DescribeCluster"
         ],
         "Resource" : "*",
         "Condition" : {
@@ -60,9 +61,20 @@ resource "aws_iam_policy" "dev_access_policy" {
         }
       },
       {
-        "Sid" : "VisualEditor1",
+        "Sid" : "S3Actions",
         "Effect" : "Allow",
         "Action" : [
+          "s3:ListAccessPointsForObjectLambda",
+          "s3:PutStorageLensConfiguration",
+          "s3:ListStorageLensGroups",
+          "s3:ListAccessGrantsInstances",
+          "s3:ListAccessPoints",
+          "s3:ListJobs",
+          "s3:CreateStorageLensGroup",
+          "s3:ListMultiRegionAccessPoints",
+          "s3:ListStorageLensConfigurations",
+          "s3:ListAllMyBuckets",
+          "s3:CreateJob",
           "s3:DeleteBucketMetadataTableConfiguration",
           "s3:PauseReplication",
           "s3:PutAnalyticsConfiguration",
@@ -115,9 +127,12 @@ resource "aws_iam_policy" "dev_access_policy" {
         }
       },
       {
-        "Sid" : "VisualEditor2",
+        "Sid" : "SecretsManagerActions",
         "Effect" : "Allow",
-        "Action" : "secretsmanager:*",
+        "Action" : [
+          "secretsmanager:ListSecrets",
+          "secretsmanager:*"
+        ],
         "Resource" : "*",
         "Condition" : {
           "StringEquals" : {
