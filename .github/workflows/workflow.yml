@@ -14,9 +14,11 @@ jobs:
   security-scan:
     name: Checkov Security Scan - ${{ matrix.platform }}/${{ matrix.module }}
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     
     strategy:
       fail-fast: false
+      max-parallel: 10
       matrix:
         include:
           # AWS Modules
@@ -171,14 +173,22 @@ jobs:
         uses: actions/checkout@v4
         
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
           
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            
       - name: Install Checkov
         run: |
           python -m pip install --upgrade pip
-          pip install checkov
+          pip install --upgrade checkov
           
       - name: Run Checkov Security Scan
         id: checkov
@@ -189,7 +199,7 @@ jobs:
           if [ -d "${{ matrix.directory }}" ] && [ -n "$(find ${{ matrix.directory }} -name '*.tf' -o -name '*.tfvars' -o -name '*.hcl')" ]; then
             echo "📁 Directory ${{ matrix.directory }} exists and contains Terraform files"
             
-            # Executar Checkov com configurações de segurança
+            # Executar Checkov com configurações de segurança otimizadas
             checkov \
               --directory ${{ matrix.directory }} \
               --framework terraform \
@@ -203,9 +213,11 @@ jobs:
               --skip-path .git \
               --skip-path node_modules \
               --skip-path .checkov \
+              --skip-path .terraform.lock.hcl \
               --external-checks-dir .checkov \
               --download-external-modules true \
-              --var-file ${{ matrix.directory }}/*.tfvars 2>/dev/null || true
+              --var-file ${{ matrix.directory }}/*.tfvars 2>/dev/null || true \
+              --max-framework-version 1.0
             
             echo "✅ Checkov scan completed for ${{ matrix.platform }}/${{ matrix.module }}"
           else
@@ -214,7 +226,7 @@ jobs:
           fi
           
       - name: Upload Checkov Report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: checkov-report-${{ matrix.platform }}-${{ matrix.module }}
