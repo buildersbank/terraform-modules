@@ -1,0 +1,261 @@
+name: Checkov Security Scan
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+    branches:
+      - master
+      - main
+
+jobs:
+  security-scan:
+    name: Checkov Security Scan - ${{ matrix.platform }}/${{ matrix.module }}
+    runs-on: ubuntu-latest
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # AWS Modules
+          - platform: aws
+            module: amazon_mq
+            directory: aws/modules/amazon_mq
+          - platform: aws
+            module: amazon_mq_v2
+            directory: aws/modules/amazon_mq_v2
+          - platform: aws
+            module: cloudfront
+            directory: aws/modules/cloudfront
+          - platform: aws
+            module: cluster-autoscaler
+            directory: aws/modules/cluster-autoscaler
+          - platform: aws
+            module: ebs_security
+            directory: aws/modules/ebs_security
+          - platform: aws
+            module: ec2
+            directory: aws/modules/ec2
+          - platform: aws
+            module: ecr
+            directory: aws/modules/ecr
+          - platform: aws
+            module: eks
+            directory: aws/modules/eks
+          - platform: aws
+            module: eks_cluster_autoscaler
+            directory: aws/modules/eks_cluster_autoscaler
+          - platform: aws
+            module: elasticache
+            directory: aws/modules/elasticache
+          - platform: aws
+            module: iam_policy
+            directory: aws/modules/iam_policy
+          - platform: aws
+            module: iam_role
+            directory: aws/modules/iam_role
+          - platform: aws
+            module: iam_user
+            directory: aws/modules/iam_user
+          - platform: aws
+            module: iam-setup
+            directory: aws/modules/iam-setup
+          - platform: aws
+            module: lambda
+            directory: aws/modules/lambda
+          - platform: aws
+            module: msk_cluster
+            directory: aws/modules/msk_cluster
+          - platform: aws
+            module: nodegroup
+            directory: aws/modules/nodegroup
+          - platform: aws
+            module: oidc_provider
+            directory: aws/modules/oidc_provider
+          - platform: aws
+            module: permission_set
+            directory: aws/modules/permission_set
+          - platform: aws
+            module: rds
+            directory: aws/modules/rds
+          - platform: aws
+            module: rds-scheduler
+            directory: aws/modules/rds-scheduler
+          - platform: aws
+            module: subnet
+            directory: aws/modules/subnet
+          - platform: aws
+            module: tag-conformance-pack
+            directory: aws/modules/tag-conformance-pack
+          - platform: aws
+            module: vpc
+            directory: aws/modules/vpc
+          - platform: aws
+            module: waf
+            directory: aws/modules/waf
+          
+          # GCP Modules
+          - platform: gcp
+            module: big_query
+            directory: gcp/big_query
+          - platform: gcp
+            module: big_query_table
+            directory: gcp/big_query_table
+          - platform: gcp
+            module: composer
+            directory: gcp/composer
+          - platform: gcp
+            module: compute_instance
+            directory: gcp/compute_instance
+          - platform: gcp
+            module: dataplex
+            directory: gcp/dataplex
+          - platform: gcp
+            module: firewall
+            directory: gcp/firewall
+          - platform: gcp
+            module: gke
+            directory: gcp/gke
+          - platform: gcp
+            module: iam
+            directory: gcp/iam
+          - platform: gcp
+            module: nodepool
+            directory: gcp/nodepool
+          - platform: gcp
+            module: postgres
+            directory: gcp/postgres
+          - platform: gcp
+            module: redis
+            directory: gcp/redis
+          - platform: gcp
+            module: storage
+            directory: gcp/storage
+          - platform: gcp
+            module: subnet
+            directory: gcp/subnet
+          - platform: gcp
+            module: taxonomy
+            directory: gcp/taxonomy
+          - platform: gcp
+            module: vpc
+            directory: gcp/vpc
+          
+          # Azure Modules
+          - platform: azure
+            module: aks
+            directory: azure/aks
+          - platform: azure
+            module: application-gateway
+            directory: azure/application-gateway
+          - platform: azure
+            module: identity
+            directory: azure/identity
+          - platform: azure
+            module: redis
+            directory: azure/redis
+          - platform: azure
+            module: storage
+            directory: azure/storage
+          - platform: azure
+            module: subnet
+            directory: azure/subnet
+          - platform: azure
+            module: vpc
+            directory: azure/vpc
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Install Checkov
+        run: |
+          python -m pip install --upgrade pip
+          pip install checkov
+          
+      - name: Run Checkov Security Scan
+        id: checkov
+        run: |
+          echo "🔍 Scanning ${{ matrix.platform }}/${{ matrix.module }}..."
+          
+          # Verificar se o diretório existe e contém arquivos Terraform
+          if [ -d "${{ matrix.directory }}" ] && [ -n "$(find ${{ matrix.directory }} -name '*.tf' -o -name '*.tfvars' -o -name '*.hcl')" ]; then
+            echo "📁 Directory ${{ matrix.directory } exists and contains Terraform files"
+            
+            # Executar Checkov com configurações de segurança
+            checkov \
+              --directory ${{ matrix.directory }} \
+              --framework terraform \
+              --output cli \
+              --output junitxml \
+              --output-file-path ${{ matrix.platform }}-${{ matrix.module }}-checkov-report \
+              --soft-fail \
+              --compact \
+              --quiet \
+              --skip-path .terraform \
+              --skip-path .git \
+              --skip-path node_modules \
+              --skip-path .checkov \
+              --external-checks-dir .checkov \
+              --download-external-modules true \
+              --var-file ${{ matrix.directory }}/*.tfvars 2>/dev/null || true
+            
+            echo "✅ Checkov scan completed for ${{ matrix.platform }}/${{ matrix.module }}"
+          else
+            echo "⚠️ Directory ${{ matrix.directory }} does not exist or contains no Terraform files"
+            echo "✅ Skipping scan for ${{ matrix.platform }}/${{ matrix.module }}"
+          fi
+          
+      - name: Upload Checkov Report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: checkov-report-${{ matrix.platform }}-${{ matrix.module }}
+          path: ${{ matrix.platform }}-${{ matrix.module }}-checkov-report*
+          retention-days: 30
+          
+      - name: Comment PR with Security Results
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            try {
+              const reportPath = `${{ matrix.platform }}-${{ matrix.module }}-checkov-report.xml`;
+              
+              if (fs.existsSync(reportPath)) {
+                const report = fs.readFileSync(reportPath, 'utf8');
+                const findings = report.match(/failures="(\d+)"/);
+                const failureCount = findings ? parseInt(findings[1]) : 0;
+                
+                if (failureCount > 0) {
+                  github.rest.issues.createComment({
+                    issue_number: context.issue.number,
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    body: `🚨 **Security Scan Results for ${{ matrix.platform }}/${{ matrix.module }}**\n\n` +
+                          `Found **${failureCount}** security issues that need attention.\n\n` +
+                          `Please review the Checkov report and address any security findings.`
+                  });
+                } else {
+                  github.rest.issues.createComment({
+                    issue_number: context.issue.number,
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    body: `✅ **Security Scan Results for ${{ matrix.platform }}/${{ matrix.module }}**\n\n` +
+                          `No security issues found. Great job!`
+                  });
+                }
+              }
+            } catch (error) {
+              console.log('Error processing Checkov report:', error);
+            } 
