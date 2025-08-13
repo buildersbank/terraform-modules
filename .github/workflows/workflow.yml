@@ -187,7 +187,7 @@ jobs:
           
           # Verificar se o diretório existe e contém arquivos Terraform
           if [ -d "${{ matrix.directory }}" ] && [ -n "$(find ${{ matrix.directory }} -name '*.tf' -o -name '*.tfvars' -o -name '*.hcl')" ]; then
-            echo "📁 Directory ${{ matrix.directory } exists and contains Terraform files"
+            echo "📁 Directory ${{ matrix.directory }} exists and contains Terraform files"
             
             # Executar Checkov com configurações de segurança
             checkov \
