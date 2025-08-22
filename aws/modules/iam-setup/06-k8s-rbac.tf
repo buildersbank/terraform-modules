@@ -7,10 +7,15 @@ resource "kubernetes_cluster_role" "devops_role" {
 
   rule {
     api_groups = [""]
-    resources  = ["pods", "services", "endpoints", "configmaps", "events", "namespaces", "deployments", "replicasets", "daemonsets", "statefulsets"]
+    resources  = ["pods", "services", "endpoints", "configmaps", "events", "namespaces"]
     verbs      = ["*"]
   }
 
+  rule {
+    api_groups = ["apps"]
+    resources  = ["deployments", "replicasets", "daemonsets", "statefulsets"]
+    verbs      = ["*"]
+  }
   rule {
     api_groups = [""]
     resources  = ["nodes"]
@@ -120,7 +125,13 @@ resource "kubernetes_cluster_role" "devops_n3_role" {
 
   rule {
     api_groups = [""]
-    resources  = ["pods", "services", "endpoints", "configmaps", "events", "namespaces", "deployments", "replicasets", "daemonsets", "statefulsets"]
+    resources  = ["pods", "services", "endpoints", "configmaps", "events", "namespaces"]
+    verbs      = ["*"]
+  }
+
+  rule {
+    api_groups = ["apps"]
+    resources  = ["deployments", "replicasets", "daemonsets", "statefulsets"]
     verbs      = ["*"]
   }
 
