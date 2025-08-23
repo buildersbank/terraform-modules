@@ -16,6 +16,13 @@ resource "kubernetes_cluster_role" "devops_role" {
     resources  = ["deployments", "replicasets", "daemonsets", "statefulsets"]
     verbs      = ["*"]
   }
+
+  rule {
+    api_groups = ["batch"]
+    resources  = ["jobs", "cronjobs"]
+    verbs      = ["*"]
+  }
+  
   rule {
     api_groups = [""]
     resources  = ["nodes"]
@@ -132,6 +139,12 @@ resource "kubernetes_cluster_role" "devops_n3_role" {
   rule {
     api_groups = ["apps"]
     resources  = ["deployments", "replicasets", "daemonsets", "statefulsets"]
+    verbs      = ["*"]
+  }
+
+  rule {
+    api_groups = ["batch"]
+    resources  = ["jobs", "cronjobs"]
     verbs      = ["*"]
   }
 
