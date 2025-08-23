@@ -1,12 +1,12 @@
 resource "aws_iam_policy" "devops_access_policy" {
-  name        = "AllowedDevopsAccess"
+  name        = var.devops_policy_name
   description = ""
   
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Sid    = "VisualEditor0"
+        Sid    = "AllowedDevopsAccess"
         Effect = "Allow"
         Action = [
           "secretsmanager:*",
@@ -22,7 +22,9 @@ resource "aws_iam_policy" "devops_access_policy" {
           "ce:*",
           "acm:*",
           "ses:*",
-          "route53:*"
+          "route53:*",
+          "cloudfront:*",
+          "elasticloadbalancing:*"
         ]
         Resource = "*"
       },

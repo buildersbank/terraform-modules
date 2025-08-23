@@ -1,5 +1,5 @@
 resource "aws_iam_policy" "deny_confidential_secrets" {
-  name        = "DenyGetSecretValueForEnvConfidential"
+  name        = var.deny_confidential_secrets_policy_name
   description = ""
   
   policy = jsonencode({

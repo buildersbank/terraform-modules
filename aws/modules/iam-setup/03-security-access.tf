@@ -1,12 +1,12 @@
 resource "aws_iam_policy" "security_access_policy" {
-  name        = "AllowedSecurityAccess"
+  name        = var.security_policy_name
   description = ""
   
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = concat([
       {
-        Sid    = "VisualEditor0"
+        Sid    = "AllowedSecurityAccess"
         Effect = "Allow"
         Action = [
           "s3:Get*",

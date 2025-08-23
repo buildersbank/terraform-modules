@@ -23,3 +23,33 @@ variable "bucket_tfstate_arn" {
   type        = string
   default     = ""
 }
+
+variable "deny_confidential_secrets_policy_name" {
+  description = "Nome da policy que nega acesso a secrets confidenciais"
+  type        = string
+  default     = "DenyGetSecretValueForEnvConfidential"
+}
+
+variable "devops_policy_name" {
+  description = "Nome da policy de acesso do DevOps"
+  type        = string
+  default     = "AllowedDevopsAccess"
+}
+
+variable "devops_n3_policy_name" {
+  description = "Nome da policy de acesso do DevOps N3"
+  type        = string
+  default     = "AllowedDevopsAccessN3"
+}
+
+variable "dev_policy_name" {
+  description = "Nome da policy de acesso do Dev"
+  type        = string
+  default     = "AllowedDevAccess"
+}
+
+variable "security_policy_name" {
+  description = "Nome da policy de acesso de segurança"
+  type        = string
+  default     = "AllowedSecurityAccess"
+}

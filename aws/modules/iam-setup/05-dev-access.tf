@@ -1,5 +1,5 @@
 resource "aws_iam_policy" "dev_access_policy" {
-  name        = "AllowedDevAccess"
+  name        = var.dev_policy_name
   description = "Policy com permissões específicas do EKS para ambientes de desenvolvimento e homologação"
 
   lifecycle {

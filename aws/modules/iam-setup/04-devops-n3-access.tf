@@ -1,12 +1,12 @@
 resource "aws_iam_policy" "devops_n3_access_policy" {
-  name        = "AllowedDevopsAccessN3"
+  name        = var.devops_n3_policy_name
   description = ""
   
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Sid    = "VisualEditor0"
+        Sid    = "AllowedDevopsAccessN3"
         Effect = "Allow"
         Action = [
           "iam:*",
@@ -23,7 +23,9 @@ resource "aws_iam_policy" "devops_n3_access_policy" {
           "ce:*",
           "acm:*",
           "ses:*",
-          "route53:*"
+          "route53:*",
+          "cloudfront:*",
+          "elasticloadbalancing:*"
         ]
         Resource = "*"
       }
