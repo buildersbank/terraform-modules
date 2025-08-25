@@ -27,7 +27,9 @@ resource "aws_iam_policy" "devops_access_policy" {
           "elasticloadbalancing:*",
           "logs:*",
           "cloudwatch:*",
-          "kms:*"
+          "kms:*",
+          "support:*",
+          "sns:*"
         ]
         Resource = "*"
       },
