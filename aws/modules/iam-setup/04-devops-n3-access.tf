@@ -25,7 +25,9 @@ resource "aws_iam_policy" "devops_n3_access_policy" {
           "ses:*",
           "route53:*",
           "cloudfront:*",
-          "elasticloadbalancing:*"
+          "elasticloadbalancing:*",
+          "logs:*",
+          "cloudwatch:*",
         ]
         Resource = "*"
       }
