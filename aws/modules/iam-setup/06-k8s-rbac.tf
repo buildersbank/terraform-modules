@@ -70,6 +70,12 @@ resource "kubernetes_cluster_role" "devops_role" {
     verbs      = ["*"]
   }
 
+  rule {
+    api_groups = ["apps"]
+    resources  = ["deployments/rollout", "deployments/status", "deployments/restart", "deployments/scale"]
+    verbs      = ["*"]
+  }
+
   # Permissões de leitura em métricas
   rule {
     api_groups = ["metrics.k8s.io"]
@@ -139,6 +145,12 @@ resource "kubernetes_cluster_role" "devops_n3_role" {
   rule {
     api_groups = ["apps"]
     resources  = ["deployments", "replicasets", "daemonsets", "statefulsets"]
+    verbs      = ["*"]
+  }
+
+  rule {
+    api_groups = ["apps"]
+    resources  = ["deployments/rollout", "deployments/status", "deployments/restart", "deployments/scale"]
     verbs      = ["*"]
   }
 
