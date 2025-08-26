@@ -29,7 +29,8 @@ resource "aws_iam_policy" "dev_access_policy" {
           "eks:ListPodIdentityAssociations",
           "eks:ListAccessPolicies",
           "eks:ListAssociatedAccessPolicies",
-          "secretsmanager:ListSecrets"
+          "secretsmanager:ListSecrets",
+          "s3:ListBucket",
         ],
         "Resource" : "*"
       },
