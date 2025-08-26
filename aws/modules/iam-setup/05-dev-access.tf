@@ -30,7 +30,8 @@ resource "aws_iam_policy" "dev_access_policy" {
           "eks:ListAccessPolicies",
           "eks:ListAssociatedAccessPolicies",
           "secretsmanager:ListSecrets",
-          "s3:ListBucket",
+          "s3:ListAllMyBuckets",
+          "s3:ListBucket"
         ],
         "Resource" : "*"
       },
@@ -63,6 +64,33 @@ resource "aws_iam_policy" "dev_access_policy" {
         }
       },
       {
+        "Sid" : "S3BasicActions",
+        "Effect" : "Allow",
+        "Action" : [
+          "s3:GetBucketLocation",
+          "s3:GetBucketVersioning",
+          "s3:GetBucketPolicy",
+          "s3:GetBucketTagging",
+          "s3:GetBucketPublicAccessBlock",
+          "s3:GetBucketAcl",
+          "s3:GetBucketCORS",
+          "s3:GetBucketLogging",
+          "s3:GetBucketNotification",
+          "s3:GetBucketRequestPayment",
+          "s3:GetBucketWebsite",
+          "s3:GetBucketObjectLockConfiguration",
+          "s3:GetBucketEncryption",
+          "s3:GetBucketIntelligentTieringConfiguration",
+          "s3:GetBucketAnalyticsConfiguration",
+          "s3:GetBucketMetricsConfiguration",
+          "s3:GetBucketReplication",
+          "s3:GetBucketAccelerateConfiguration",
+          "s3:GetBucketInventoryConfiguration",
+          "s3:GetBucketLifecycleConfiguration"
+        ],
+        "Resource" : "*"
+      },
+      {
         "Sid" : "S3Actions",
         "Effect" : "Allow",
         "Action" : [
@@ -75,7 +103,6 @@ resource "aws_iam_policy" "dev_access_policy" {
           "s3:CreateStorageLensGroup",
           "s3:ListMultiRegionAccessPoints",
           "s3:ListStorageLensConfigurations",
-          "s3:ListAllMyBuckets",
           "s3:CreateJob",
           "s3:DeleteBucketMetadataTableConfiguration",
           "s3:PauseReplication",
@@ -85,7 +112,6 @@ resource "aws_iam_policy" "dev_access_policy" {
           "s3:ListBucketVersions",
           "s3:RestoreObject",
           "s3:CreateBucket",
-          "s3:ListBucket",
           "s3:CreateBucketMetadataTableConfiguration",
           "s3:ReplicateObject",
           "s3:PutEncryptionConfiguration",
@@ -150,6 +176,6 @@ resource "aws_iam_policy" "dev_access_policy" {
 }
 
 output "dev_eks_access_policy_arn" {
-  description = "ARN da policy de acesso EKS para produção"
+  description = "ARN da policy de acesso EKS para desenvolvimento e homologação"
   value       = aws_iam_policy.dev_access_policy.arn
 }
