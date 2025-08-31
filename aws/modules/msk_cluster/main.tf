@@ -10,6 +10,7 @@ module "msk_cluster" {
   kafka_version          = var.msk_kafka_version
   number_of_broker_nodes = var.number_of_brokers
   enhanced_monitoring    = "PER_TOPIC_PER_PARTITION"
+  cloudwatch_log_group_retention_in_days = var.logs_retention_in_days
 
   broker_node_client_subnets = var.subnet_ids
   broker_node_connectivity_info = {
@@ -33,7 +34,6 @@ module "msk_cluster" {
   configuration_name        = "${var.name}-configuration"
   configuration_description = "Basic Configuration of the cluster"
   configuration_server_properties = {
-    "allow.everyone.if.no.acl.found" = !var.public_access
     "auto.create.topics.enable"      = true
     "delete.topic.enable"            = true
   }
