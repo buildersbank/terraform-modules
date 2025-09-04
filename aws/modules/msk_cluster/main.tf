@@ -33,9 +33,10 @@ module "msk_cluster" {
   configuration_name        = "${var.name}-configuration"
   configuration_description = "Basic Configuration of the cluster"
   configuration_server_properties = {
-    "allow.everyone.if.no.acl.found" = !var.public_access
-    "auto.create.topics.enable"      = true
-    "delete.topic.enable"            = true
+    "allow.everyone.if.no.acl.found"           = !var.public_access
+    "auto.create.topics.enable"                = true
+    "delete.topic.enable"                      = true
+    "transaction.state.log.replication.factor" = var.number_of_brokers
   }
 
   jmx_exporter_enabled    = var.jmx_enabled
