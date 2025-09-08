@@ -129,6 +129,24 @@ resource "kubernetes_cluster_role" "devops_n3_role" {
     verbs      = ["*"]
   }
 
+  rule {
+    api_groups = ["scheduling.k8s.io"]
+    resources  = ["*"]
+    verbs      = ["*"]
+  }
+
+  rule {
+    api_groups = ["policy"]
+    resources  = ["*"]
+    verbs      = ["*"]
+  }
+
+  rule {
+    api_groups = ["apiextensions.k8s.io", "storage.k8s.io", "admissionregistration.k8s.io", "dynatrace.com"]
+    resources  = ["*"]
+    verbs      = ["*"]
+  }
+
   # Permissão total para serviceaccounts (necessário para RBAC avançado)
   rule {
     api_groups = [""]

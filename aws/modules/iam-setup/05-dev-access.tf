@@ -17,6 +17,7 @@ resource "aws_iam_policy" "dev_access_policy" {
         "Action" : [
           "eks:ListClusters",
           "eks:DescribeClusterVersions",
+          "eks:DescribeCluster",
           "eks:ListEksAnywhereSubscriptions",
           "eks:ListAccessEntries",
           "eks:ListAddons",
