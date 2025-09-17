@@ -30,7 +30,8 @@ resource "aws_iam_policy" "devops_n3_access_policy" {
           "cloudwatch:*",
           "kms:*",
           "support:*",
-          "sns:*"
+          "sns:*",
+          "msk:*",
         ]
         Resource = "*"
       }
