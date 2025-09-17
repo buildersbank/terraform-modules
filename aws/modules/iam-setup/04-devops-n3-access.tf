@@ -32,6 +32,7 @@ resource "aws_iam_policy" "devops_n3_access_policy" {
           "support:*",
           "sns:*",
           "msk:*",
+          "kafka:*",
         ]
         Resource = "*"
       }
