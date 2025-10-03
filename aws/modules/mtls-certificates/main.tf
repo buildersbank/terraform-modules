@@ -110,12 +110,6 @@ resource "aws_s3_object" "ca_cert" {
   key          = var.trust_store_ca_key
   content      = tls_self_signed_cert.ca.cert_pem
   content_type = "application/x-pem-file"
-  
-  tags = merge(var.tags, {
-    Name        = "CA Certificate"
-    Type        = "Trust Store"
-    Environment = var.environment
-  })
 
   depends_on = [aws_s3_bucket.trust_store]
 }
