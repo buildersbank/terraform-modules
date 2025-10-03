@@ -18,6 +18,11 @@ variable "dev_group_principal_arn" {
   type        = string
 }
 
+variable "security_group_principal_arn" {
+  description = "ARN do grupo de usuários do Security"
+  type        = string
+}
+
 variable "bucket_tfstate_arn" {
   description = "ARN do bucket do TFState"
   type        = string
