@@ -83,6 +83,7 @@ module "eks" {
       use_custom_launch_template = config.use_custom_launch_template
       disk_size                  = config.disk_size
       taints                     = config.taints
+      block_device_mappings      = config.block_device_mappings
       iam_role_additional_policies = {
         managed_policy_arns = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
       }

@@ -81,6 +81,22 @@ variable "eks_node_groups" {
       value  = string
       effect = string
     }))
+    block_device_mappings = optional(map(object({
+      device_name = optional(string)
+      ebs = optional(object({
+        delete_on_termination      = optional(bool)
+        encrypted                  = optional(bool)
+        iops                       = optional(number)
+        kms_key_id                 = optional(string)
+        snapshot_id                = optional(string)
+        throughput                 = optional(number)
+        volume_initialization_rate = optional(number)
+        volume_size                = optional(number)
+        volume_type                = optional(string)
+      }))
+      no_device    = optional(string)
+      virtual_name = optional(string)
+    })))
   }))
 }
 
