@@ -64,5 +64,10 @@ resource "helm_release" "trust-manager" {
   create_namespace = true
   namespace        = "cert-manager"
   cleanup_on_fail  = true
+
+  set {
+    name  = "app.trust.namespace"
+    value = "cert-manager"
+  }
   
 }
