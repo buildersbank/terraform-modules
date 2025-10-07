@@ -79,3 +79,9 @@ variable "kms_key_administrators" {
   type        = list(string)
   default     = []
 }
+
+variable "kms_policy" {
+  description = "Policy for the KMS key"
+  type        = string
+  default     = null
+}

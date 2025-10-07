@@ -96,6 +96,8 @@ module "kms" {
   aliases                 = ["msk/${var.name}"]
   aliases_use_name_prefix = false
 
+  policy = var.kms_policy
+
   tags = var.tags
 
 }
