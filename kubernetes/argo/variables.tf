@@ -9,3 +9,11 @@ variable "argocd_version" {
   type        = string
   default     = "stable"
 }
+
+variable "argocd-cmd-params-cm" {
+  description = "ArgoCD command parameters"
+  type        = map(string)
+  default     = {
+    "server.insecure" = "true"
+  }
+}
