@@ -40,8 +40,8 @@ spec:
   # This is a one-year duration, rotating two months before expiry.
   # Feel free to reduce this, but remember that there is a manual
   # process for rotating the trust anchor!
-  duration: 8760h0m0s
-  renewBefore: 7320h0m0s
+  duration: ${var.ca_cert_validity_hours}h0m0s
+  renewBefore: ${var.ca_cert_validity_hours * 0.7}h0m0s
   privateKey:
     rotationPolicy: Always
     algorithm: ECDSA
@@ -94,8 +94,8 @@ spec:
   commonName: identity.linkerd.cluster.local
   # This is a two-day duration, rotating slightly over a day before
   # expiry. Feel free to set this as you like.
-  duration: 48h0m0s
-  renewBefore: 25h0m0s
+  duration: ${var.issuer_cert_validity_hours}h0m0s
+  renewBefore: ${var.issuer_cert_validity_hours * 0.7}h0m0s
   privateKey:
     rotationPolicy: Always
     algorithm: ECDSA
