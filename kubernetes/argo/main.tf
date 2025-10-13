@@ -25,3 +25,12 @@ resource "k8s_manifest" "apply_argocd_manifests" {
 
   depends_on = [kubernetes_namespace.argo]
 }
+
+
+resource "kubernetes_config_map" "argocd-cmd-params-cm" {
+  metadata {
+    name = "argocd-cmd-params-cm"
+  }
+
+  data = var.argocd-cmd-params-cm
+}

@@ -1,3 +1,4 @@
+data "aws_caller_identity" "current" {}
 module "amazon-external-secret-policy" {
   source = "github.com/buildersbank/terraform-modules/aws/modules/iam_policy"
 
@@ -41,7 +42,9 @@ resource "aws_iam_role" "external_secrets_role" {
     Version = "2012-10-17"
     Statement = [
       {
-        Action = "sts:AssumeRoleWithWebIdentity"
+        Action = [
+          "sts:AssumeRoleWithWebIdentity"
+        ]
         Effect = "Allow"
         Principal = {
           Federated = var.oidc_provider_arn
@@ -51,6 +54,15 @@ resource "aws_iam_role" "external_secrets_role" {
             "${replace(var.oidc_provider_arn, "/^.*oidc-provider\\//", "")}:sub" = "system:serviceaccount:external-secrets:external-secrets"
             "${replace(var.oidc_provider_arn, "/^.*oidc-provider\\//", "")}:aud" = "sts.amazonaws.com"
           }
+        }
+      },
+      {
+        Action = [
+          "sts:AssumeRole"
+        ]
+        Effect = "Allow"
+        Principal = {
+          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${var.cluster_name}-external-secrets-role"
         }
       }
     ]
