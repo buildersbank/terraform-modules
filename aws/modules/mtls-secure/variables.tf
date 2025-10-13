@@ -100,6 +100,17 @@ variable "create_signed_certificates_bucket" {
 
 # ===== CONFIGURAÇÃO DO TRUSTSTORE =====
 
+variable "create_truststore" {
+  description = "Se deve criar o AWS Load Balancer Trust Store"
+  type        = bool
+  default     = true
+}
+
+variable "truststore_name" {
+  description = "Nome do AWS Load Balancer Trust Store"
+  type        = string
+}
+
 variable "truststore_bucket" {
   description = "Nome do bucket S3 para o truststore"
   type        = string
@@ -173,4 +184,10 @@ variable "local_backup_path" {
 variable "environment" {
   description = "Nome do ambiente"
   type        = string
+}
+
+variable "tags" {
+  description = "Tags adicionais para os recursos"
+  type        = map(string)
+  default     = {}
 }

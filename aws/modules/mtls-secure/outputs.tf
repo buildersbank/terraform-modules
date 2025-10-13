@@ -62,6 +62,21 @@ output "truststore_bucket" {
   value       = var.truststore_bucket
 }
 
+output "truststore_arn" {
+  description = "ARN do AWS Load Balancer Trust Store"
+  value       = var.create_truststore ? aws_lb_trust_store.main[0].arn : null
+}
+
+output "truststore_name" {
+  description = "Nome do AWS Load Balancer Trust Store"
+  value       = var.create_truststore ? aws_lb_trust_store.main[0].name : null
+}
+
+output "truststore_id" {
+  description = "ID do AWS Load Balancer Trust Store"
+  value       = var.create_truststore ? aws_lb_trust_store.main[0].id : null
+}
+
 output "ca_certificate_truststore_s3_uri" {
   description = "URI S3 para o certificado da CA no truststore"
   value       = "s3://${var.truststore_bucket}/${var.truststore_ca_key}"
@@ -74,11 +89,13 @@ output "trust_bundle_s3_uri" {
 
 output "alb_truststore_config" {
   description = "Configuração do truststore para ALB"
-  value = {
+  value = var.create_truststore ? {
+    truststore_arn = aws_lb_trust_store.main[0].arn
+    truststore_name = aws_lb_trust_store.main[0].name
     s3_bucket = var.truststore_bucket
-    s3_key    = var.truststore_ca_key
-    s3_uri    = "s3://${var.truststore_bucket}/${var.truststore_ca_key}"
-  }
+    s3_key    = var.trust_bundle_key
+    s3_uri    = "s3://${var.truststore_bucket}/${var.trust_bundle_key}"
+  } : null
 }
 
 # ===== OUTPUTS DE EXPORTAÇÃO =====
@@ -130,7 +147,10 @@ output "mtls_summary" {
       }
     }
     truststore = {
+      created = var.create_truststore
       bucket = var.truststore_bucket
+      truststore_arn = var.create_truststore ? aws_lb_trust_store.main[0].arn : null
+      truststore_name = var.create_truststore ? aws_lb_trust_store.main[0].name : null
       ca_certificate_uri = "s3://${var.truststore_bucket}/${var.truststore_ca_key}"
       trust_bundle_uri = "s3://${var.truststore_bucket}/${var.trust_bundle_key}"
       additional_certificates_count = length(var.additional_trusted_certificates)

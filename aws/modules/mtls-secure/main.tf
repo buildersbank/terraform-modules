@@ -177,6 +177,23 @@ resource "aws_s3_object" "certificate_bundle" {
 
 # ===== TRUSTSTORE =====
 
+# AWS Load Balancer Trust Store
+resource "aws_lb_trust_store" "main" {
+  count = var.create_truststore ? 1 : 0
+  
+  name = var.truststore_name
+  
+  ca_certificates_bundle_s3_bucket = var.truststore_bucket
+  ca_certificates_bundle_s3_key    = var.trust_bundle_key
+  
+  tags = merge(var.tags, {
+    Name        = var.truststore_name
+    Environment = var.environment
+    Purpose     = "mTLS Trust Store"
+    ManagedBy   = "terraform"
+  })
+}
+
 resource "aws_s3_bucket" "truststore" {
   count  = var.create_truststore_bucket ? 1 : 0
   bucket = var.truststore_bucket
